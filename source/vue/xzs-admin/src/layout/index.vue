@@ -1,17 +1,16 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div  class="hasTagsView main-container">
+    <div class="hasTagsView main-container">
       <div class="fixed-header">
         <navbar />
-        <tags-view/>
+        <tags-view />
       </div>
       <app-main />
       <div class="foot-copyright">
-        <span>Copyright ©2019-2025 武汉思维跳跃科技有限公司 版权所有</span>
       </div>
-      <back-to-top :visibility-height="100" :back-position="0" transition-name="fade" ref="backTop"/>
+      <back-to-top :visibility-height="100" :back-position="0" transition-name="fade" ref="backTop" />
     </div>
   </div>
 </template>
@@ -36,7 +35,7 @@ export default {
       sidebar: state => state.app.sidebar,
       device: state => state.app.device
     }),
-    classObj () {
+    classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
@@ -46,7 +45,7 @@ export default {
     }
   },
   methods: {
-    handleClickOutside () {
+    handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }
   }
@@ -54,46 +53,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/styles/mixin.scss";
-  @import "~@/styles/variables.scss";
+@import "~@/styles/mixin.scss";
+@import "~@/styles/variables.scss";
 
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
-    height: 100%;
-    width: 100%;
+.app-wrapper {
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
 
-    &.mobile.openSidebar {
-      position: fixed;
-      top: 0;
-    }
-  }
-
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
-  }
-
-  .fixed-header {
+  &.mobile.openSidebar {
     position: fixed;
     top: 0;
-    right: 0;
-    z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
-    transition: width 0.28s;
   }
+}
 
-  .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
-  }
+.drawer-bg {
+  background: #000;
+  opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+}
 
-  .mobile .fixed-header {
-    width: 100%;
-  }
+.fixed-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  width: calc(100% - #{$sideBarWidth});
+  transition: width 0.28s;
+}
 
+.hideSidebar .fixed-header {
+  width: calc(100% - 54px)
+}
+
+.mobile .fixed-header {
+  width: 100%;
+}
 </style>
