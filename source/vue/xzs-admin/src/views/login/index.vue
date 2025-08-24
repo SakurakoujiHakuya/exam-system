@@ -1,59 +1,43 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">学之思管理系统</h3>
+        <h3 class="title">考试管理系统</h3>
       </div>
 
       <el-form-item prop="userName">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="userName"
-          v-model="loginForm.userName"
-          placeholder="用户名"
-          name="userName"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
+        <div class="form-item-inner">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input ref="userName" v-model="loginForm.userName" placeholder="用户名" name="userName" type="text"
+            tabindex="1" auto-complete="on" />
+        </div>
       </el-form-item>
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="密码"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
+          <div class="form-item-inner">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
+              placeholder="密码" name="password" tabindex="2" auto-complete="on" @keyup.native="checkCapslock"
+              @blur="capsTooltip = false" @keyup.enter.native="handleLogin" />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </div>
         </el-form-item>
       </el-tooltip>
 
       <el-checkbox v-model="loginForm.remember" style="margin-bottom: 20px;margin-left: 5px;">记住密码</el-checkbox>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin">登录</el-button>
 
     </el-form>
-
-    <div class="account-foot-copyright">
-      <span>Copyright ©2019-2025 武汉思维跳跃科技有限公司 版权所有</span>
-    </div>
   </div>
 </template>
 
@@ -63,30 +47,12 @@ import loginApi from '@/api/login'
 
 export default {
   name: 'Login',
-  data () {
-    const validateUsername = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('用户名不能少于5个字符'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能少于5个字符'))
-      } else {
-        callback()
-      }
-    }
+  data() {
     return {
       loginForm: {
         userName: '',
         password: '',
         remember: false
-      },
-      loginRules: {
-        userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -94,21 +60,21 @@ export default {
       showDialog: false
     }
   },
-  created () {
+  created() {
     // window.addEventListener('storage', this.afterQRScan)
   },
-  mounted () {
+  mounted() {
     if (this.loginForm.userName === '') {
       this.$refs.userName.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
   },
-  destroyed () {
+  destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock ({ shiftKey, key } = {}) {
+    checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         // eslint-disable-next-line no-mixed-operators
         if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
@@ -121,7 +87,7 @@ export default {
         this.capsTooltip = false
       }
     },
-    showPwd () {
+    showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -131,7 +97,7 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin () {
+    handleLogin() {
       let _this = this
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -160,126 +126,228 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+// shadcn 风格登录页样式
 
 .login-container {
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
+  min-height: 100vh;
+  width: 100vw;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
 
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding:30px 50px 10px 50px;
-    margin:120px auto auto auto;
-    overflow: hidden;
-    background: rgba(252, 254, 255, 0.11)
+
+.login-form {
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 12px 72px 0 rgba(16, 24, 40, 0.16);
+  padding: 64px 64px 40px 64px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.title-container {
+  margin-bottom: 10px;
+
+  .title {
+    font-size: 1.7rem;
+    color: #0f172a;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.04em;
+    margin-bottom: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+
+
+.el-form-item {
+  background: #f1f5f9;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  margin-bottom: 0;
+  padding: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+
+  &:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px #6366f133;
+  }
+}
+
+.form-item-inner {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+}
+
+.svg-container {
+  color: #b6c1d6;
+  width: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  transition: color 0.2s;
+}
+
+.el-form-item:focus-within .svg-container {
+  color: #6366f1;
+}
+
+.el-input {
+  flex: 1;
+
+  .el-input__inner,
+  input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.15rem;
+    color: #0f172a;
+    padding: 16px 0 16px 0;
+    height: 48px;
+    box-shadow: none;
+
+    &::placeholder {
+      color: #b6c1d6;
+      opacity: 1;
+    }
+  }
+}
+
+
+.show-pwd {
+  color: #b6c1d6;
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: 10px;
+  user-select: none;
+  transition: color 0.2s, transform 0.1s;
+
+  &:hover {
+    color: #6366f1;
+    transform: scale(1.15);
+  }
+}
+
+
+.el-checkbox {
+  margin-bottom: 0;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+
+  .el-checkbox__input {
+    border-radius: 6px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    transition: border-color 0.2s, background 0.2s;
   }
 
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
+  .el-checkbox__input.is-checked {
+    border-color: #6366f1;
+    background: #6366f1;
+  }
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
+  .el-checkbox__label {
+    color: #334155;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+}
+
+
+.el-button {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+  border: none;
+  box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.08);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.08s;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+
+  &:hover,
+  &:focus {
+    background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
+    box-shadow: 0 4px 16px 0 rgba(99, 102, 241, 0.16);
+    transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@media (max-width: 900px) {
+  .login-form {
+    padding: 20px 3vw 12px 3vw;
+    max-width: 98vw;
+    gap: 14px;
+  }
+
+  .title-container .title {
+    font-size: 1.1rem;
+  }
+
+  .form-item-inner {
+    padding: 0 2vw;
+  }
+
+  .el-input {
+
+    .el-input__inner,
+    input {
+      font-size: 1rem;
+      padding: 10px 0 10px 0;
+      height: 36px;
     }
+  }
+
+  .el-button {
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .el-checkbox__label {
+    font-size: 0.95rem;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
+    width: 16px;
+    margin-right: 3px;
   }
 
   .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
+    font-size: 14px;
+    margin-left: 6px;
   }
 
-  .thirdparty-button {
-    position: absolute;
-    right: 0;
-    bottom: 6px;
-  }
-
-  @media only screen and (max-width: 470px) {
-    .thirdparty-button {
-      display: none;
-    }
+  .el-checkbox__input {
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
   }
 }
 </style>
