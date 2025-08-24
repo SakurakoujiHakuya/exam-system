@@ -1,24 +1,16 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-      <router-link
-        v-for="tag in visitedViews"
-        ref="tag"
-        :key="tag.path"
-        :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        tag="span"
-        class="tags-view-item"
-        @click.middle.native="closeSelectedTag(tag)"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
-      >
+      <router-link v-for="tag in visitedViews" ref="tag" :key="tag.path" :class="isActive(tag) ? 'active' : ''"
+        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }" tag="span" class="tags-view-item"
+        @click.middle.native="closeSelectedTag(tag)" @contextmenu.prevent.native="openMenu(tag, $event)">
         {{ tag.title }}
         <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+    <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li v-if="!(selectedTag.meta && selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">关闭</li>
       <li @click="closeOthersTags">关闭其他</li>
       <li @click="closeAllTags(selectedTag)">关闭全部</li>
     </ul>
@@ -32,7 +24,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: { ScrollPane },
-  data () {
+  data() {
     return {
       visible: false,
       top: 0,
@@ -42,7 +34,7 @@ export default {
     }
   },
   computed: {
-    visitedViews () {
+    visitedViews() {
       return this.$store.state.tagsView.visitedViews
     },
     ...mapGetters([
@@ -50,11 +42,11 @@ export default {
     ])
   },
   watch: {
-    $route () {
+    $route() {
       this.addTags()
       this.moveToCurrentTag()
     },
-    visible (value) {
+    visible(value) {
       if (value) {
         document.body.addEventListener('click', this.closeMenu)
       } else {
@@ -62,15 +54,15 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.initTags()
     this.addTags()
   },
   methods: {
-    isActive (route) {
+    isActive(route) {
       return route.path === this.$route.path
     },
-    filterAffixTags (routes, basePath = '/') {
+    filterAffixTags(routes, basePath = '/') {
       let tags = []
       routes.forEach(route => {
         if (route.meta && route.meta.affix) {
@@ -91,7 +83,7 @@ export default {
       })
       return tags
     },
-    initTags () {
+    initTags() {
       const affixTags = this.affixTags = this.filterAffixTags(this.routes)
       for (const tag of affixTags) {
         // Must have tag name
@@ -100,14 +92,14 @@ export default {
         }
       }
     },
-    addTags () {
+    addTags() {
       const { name } = this.$route
       if (name) {
         this.$store.dispatch('tagsView/addView', this.$route)
       }
       return false
     },
-    moveToCurrentTag () {
+    moveToCurrentTag() {
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
@@ -122,7 +114,7 @@ export default {
         }
       })
     },
-    refreshSelectedTag (view) {
+    refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view
         this.$nextTick(() => {
@@ -132,14 +124,14 @@ export default {
         })
       })
     },
-    closeSelectedTag (view) {
+    closeSelectedTag(view) {
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)
         }
       })
     },
-    closeOthersTags () {
+    closeOthersTags() {
       if (this.$route.fullPath !== this.selectedTag.fullPath) {
         this.$router.push(this.selectedTag)
       }
@@ -147,7 +139,7 @@ export default {
         this.moveToCurrentTag()
       })
     },
-    closeAllTags (view) {
+    closeAllTags(view) {
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
         if (this.affixTags.some(tag => tag.path === view.path)) {
           return
@@ -155,7 +147,7 @@ export default {
         this.toLastView(visitedViews, view)
       })
     },
-    toLastView (visitedViews, view) {
+    toLastView(visitedViews, view) {
       const latestView = visitedViews.slice(-1)[0]
       if (latestView) {
         this.$router.push(latestView)
@@ -170,7 +162,7 @@ export default {
         }
       }
     },
-    openMenu (tag, e) {
+    openMenu(tag, e) {
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
@@ -187,7 +179,7 @@ export default {
       this.visible = true
       this.selectedTag = tag
     },
-    closeMenu () {
+    closeMenu() {
       this.visible = false
     }
   }
@@ -201,6 +193,7 @@ export default {
   background: #fff;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -215,16 +208,32 @@ export default {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
+      user-select: none;
+      outline: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
+      .tags-view-wrapper .tags-view-item:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
       &.active {
-        background-color: #42b983;
+        background-color: #1976d2;
         color: #fff;
-        border-color: #42b983;
+        border-color: #1976d2;
+        border-radius: 8px;
+
         &::before {
           content: '';
           background: #fff;
@@ -238,6 +247,7 @@ export default {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background: #fff;
@@ -250,10 +260,12 @@ export default {
     font-weight: 400;
     color: #333;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -274,11 +286,13 @@ export default {
       text-align: center;
       transition: all .3s cubic-bezier(.645, .045, .355, 1);
       transform-origin: 100% 50%;
+
       &:before {
         transform: scale(.6);
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
         background-color: #b4bccc;
         color: #fff;
