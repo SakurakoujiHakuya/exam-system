@@ -3,16 +3,17 @@
     <el-header height="61" class="student-header">
       <div class="head-user">
         <el-dropdown trigger="click" placement="bottom">
-          <el-badge :is-dot="messageCount!==0" >
-            <el-avatar  class="el-dropdown-avatar" size="medium"  :src="userInfo.imagePath === null ? require('@/assets/avatar.png') : userInfo.imagePath"></el-avatar>
+          <el-badge :is-dot="messageCount !== 0">
+            <el-avatar class="el-dropdown-avatar" size="medium"
+              :src="userInfo.imagePath === null ? require('@/assets/avatar.png') : userInfo.imagePath"></el-avatar>
           </el-badge>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="$router.push({path:'/user/index'})">个人中心</el-dropdown-item>
-            <el-dropdown-item @click.native="$router.push({path:'/user/message'})">
-              <el-badge :value="messageCount" v-if="messageCount!==0">
+            <el-dropdown-item @click.native="$router.push({ path: '/user/index' })">个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="$router.push({ path: '/user/message' })">
+              <el-badge :value="messageCount" v-if="messageCount !== 0">
                 <span>消息中心</span>
               </el-badge>
-              <span  v-if="messageCount===0">消息中心</span>
+              <span v-if="messageCount === 0">消息中心</span>
             </el-dropdown-item>
             <el-dropdown-item @click.native="logout" divided>退出</el-dropdown-item>
           </el-dropdown-menu>
@@ -25,13 +26,13 @@
         <el-menu-item index="/question/index">错题本</el-menu-item>
       </el-menu>
       <div>
-        <a href="/"><img src="@/assets/logo.png" height="56"/></a>
+        <a href="/"><img src="@/assets/logo.png" height="56" /></a>
       </div>
     </el-header>
     <el-main class="student-main">
-      <router-view/>
+      <router-view />
     </el-main>
-    <el-footer height="340" class="student-footer">
+    <!-- <el-footer height="340" class="student-footer">
       <div class="foot-container">
         <div class="footer-main">
           <h4>产品介绍</h4>
@@ -56,9 +57,8 @@
           <a href="https://ke.qq.com/course/3614230" target="_blank" class="footer-main-link">学之思视频教程</a>
         </div>
       </div>
-    </el-footer>
+    </el-footer> -->
     <div class="foot-copyright">
-      <span>Copyright ©2019-2025 武汉思维跳跃科技有限公司 版权所有</span>
     </div>
   </el-container>
 </template>
@@ -69,7 +69,7 @@ import loginApi from '@/api/login'
 import userApi from '@/api/user'
 export default {
   name: 'Layout',
-  data () {
+  data() {
     return {
       defaultUrl: '/index',
       userInfo: {
@@ -77,7 +77,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     let _this = this
     this.defaultUrl = this.routeSelect(this.$route.path)
     this.getUserMessageInfo()
@@ -86,19 +86,19 @@ export default {
     })
   },
   watch: {
-    $route (to, from) {
+    $route(to, from) {
       this.defaultUrl = this.routeSelect(to.path)
     }
   },
   methods: {
-    routeSelect (path) {
+    routeSelect(path) {
       let topPath = ['/', '/index', '/paper/index', '/record/index', '/question/index']
       if (topPath.indexOf(path)) {
         return path
       }
       return null
     },
-    logout () {
+    logout() {
       let _this = this
       loginApi.logout().then(function (result) {
         if (result && result.code === 1) {
@@ -118,6 +118,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
