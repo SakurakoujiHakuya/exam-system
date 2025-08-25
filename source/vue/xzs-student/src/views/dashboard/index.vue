@@ -3,36 +3,36 @@
     <el-row class="app-item-contain">
       <h3 class="index-title-h3" style="border-left: solid 10px #3651d4;">任务中心</h3>
       <div style="padding-left: 15px">
-        <el-collapse v-loading="taskLoading" accordion v-if="taskList.length !== 0">
-          <el-collapse-item :title="taskItem.title" :name="taskItem.id" :key="taskItem.id" v-for="taskItem in taskList">
-            <table class="index-task-table">
-              <tr v-for="paperItem in taskItem.paperItems" :key="paperItem.examPaperId">
-                <td class="index-task-table-paper">
-                  {{ paperItem.examPaperName }}
-                </td>
-                <td width="70px">
-                  <el-tag :type="statusTagFormatter(paperItem.status)" v-if="paperItem.status !== null" size="mini">
-                    {{ statusTextFormatter(paperItem.status) }}
-                  </el-tag>
-                </td>
-                <td width="80px">
-                  <router-link target="_blank" :to="{ path: '/do', query: { id: paperItem.examPaperId } }"
-                    v-if="paperItem.status === null">
-                    <el-button type="text" size="small">开始答题</el-button>
-                  </router-link>
-                  <router-link target="_blank" :to="{ path: '/edit', query: { id: paperItem.examPaperAnswerId } }"
-                    v-else-if="paperItem.status === 1">
-                    <el-button type="text" size="small">批改试卷</el-button>
-                  </router-link>
-                  <router-link target="_blank" :to="{ path: '/read', query: { id: paperItem.examPaperAnswerId } }"
-                    v-else-if="paperItem.status === 2">
-                    <el-button type="text" size="small">查看试卷</el-button>
-                  </router-link>
-                </td>
-              </tr>
-            </table>
-          </el-collapse-item>
-        </el-collapse>
+        <el-table :data="flatTaskList" v-loading="taskLoading" class="task-table" stripe>
+          <el-table-column prop="taskTitle" label="任务标题" min-width="180" />
+          <el-table-column prop="examPaperName" label="试卷名称" min-width="200" />
+          <el-table-column prop="status" label="状态" width="120" align="center">
+            <template slot-scope="{row}">
+              <el-tag :type="statusTagFormatter(row.status)" v-if="row.status !== null" size="small" effect="plain">
+                {{ statusTextFormatter(row.status) }}
+              </el-tag>
+              <el-tag v-else size="small" effect="plain" type="info">
+                未开始
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="120" align="center">
+            <template slot-scope="{row}">
+              <router-link target="_blank" :to="{ path: '/do', query: { id: row.examPaperId } }"
+                v-if="row.status === null">
+                <el-button type="primary" size="mini" round>开始答题</el-button>
+              </router-link>
+              <router-link target="_blank" :to="{ path: '/edit', query: { id: row.examPaperAnswerId } }"
+                v-else-if="row.status === 1">
+                <el-button type="warning" size="mini" round>批改试卷</el-button>
+              </router-link>
+              <router-link target="_blank" :to="{ path: '/read', query: { id: row.examPaperAnswerId } }"
+                v-else-if="row.status === 2">
+                <el-button type="success" size="mini" round>查看试卷</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </el-row>
     <el-row class="app-item-contain">
@@ -124,7 +124,21 @@ export default {
     ...mapState('enumItem', {
       statusEnum: state => state.exam.examPaperAnswer.statusEnum,
       statusTag: state => state.exam.examPaperAnswer.statusTag
-    })
+    }),
+    flatTaskList() {
+      const flatList = []
+      this.taskList.forEach(task => {
+        if (task.paperItems) {
+          task.paperItems.forEach(paper => {
+            flatList.push({
+              taskTitle: task.title,
+              ...paper
+            })
+          })
+        }
+      })
+      return flatList
+    }
   }
 }
 </script>
@@ -176,8 +190,23 @@ export default {
   display: table;
   content: "";
 }
-
 .clearfix:after {
   clear: both
+}
+
+.task-table {
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.task-table ::v-deep .el-table__header th {
+  background: #f5f7fa;
+  font-weight: bold;
+  color: #333;
+}
+
+.task-table ::v-deep .el-table__row:hover {
+  background: #eef8ff;
 }
 </style>
