@@ -1,51 +1,53 @@
 <template>
   <div>
-    <el-row  class="do-exam-title">
+    <el-row class="do-exam-title">
       <el-col :span="24">
-        <span :key="item.itemOrder"  v-for="item in answer.answerItems">
-             <el-tag :type="questionCompleted(item.completed)" class="do-exam-title-tag" @click="goAnchor('#question-'+item.itemOrder)">{{item.itemOrder}}</el-tag>
+        <span :key="item.itemOrder" v-for="item in answer.answerItems">
+          <el-tag :type="questionCompleted(item.completed)" class="do-exam-title-tag"
+            @click="goAnchor('#question-' + item.itemOrder)">{{ item.itemOrder }}</el-tag>
         </span>
         <span class="do-exam-time">
-          <label>剩余时间：</label>
-          <label>{{formatSeconds(remainTime)}}</label>
+          <i class="el-icon-time"></i>
+          <span>{{ formatSeconds(remainTime) }}</span>
         </span>
       </el-col>
     </el-row>
-    <el-row  class="do-exam-title-hidden">
+    <el-row class="do-exam-title-hidden">
       <el-col :span="24">
-        <span :key="item.itemOrder"  v-for="item in answer.answerItems">
-             <el-tag  class="do-exam-title-tag" >{{item.itemOrder}}</el-tag>
+        <span :key="item.itemOrder" v-for="item in answer.answerItems">
+          <el-tag class="do-exam-title-tag">{{ item.itemOrder }}</el-tag>
         </span>
         <span class="do-exam-time">
-          <label>剩余时间：</label>
+          <i class="el-icon-time"></i>
+          <span>剩余时间</span>
         </span>
       </el-col>
     </el-row>
-    <el-container  class="app-item-contain">
+    <el-container class="app-item-contain">
       <el-header class="align-center">
-        <h1>{{form.name}}</h1>
+        <h1>{{ form.name }}</h1>
         <div>
-          <span class="question-title-padding">试卷总分：{{form.score}}</span>
-          <span class="question-title-padding">考试时间：{{form.suggestTime}}分钟</span>
+          <span class="question-title-padding">试卷总分：{{ form.score }}</span>
+          <span class="question-title-padding">考试时间：{{ form.suggestTime }}分钟</span>
         </div>
       </el-header>
       <el-main>
         <el-form :model="form" ref="form" v-loading="formLoading" label-width="100px">
-          <el-row :key="index"  v-for="(titleItem,index) in form.titleItems">
-            <h3>{{titleItem.name}}</h3>
-            <el-card class="exampaper-item-box" v-if="titleItem.questionItems.length!==0">
-              <el-form-item :key="questionItem.itemOrder" :label="questionItem.itemOrder+'.'"
-                            v-for="questionItem in titleItem.questionItems"
-                            class="exam-question-item" label-width="50px" :id="'question-'+ questionItem.itemOrder">
+          <el-row :key="index" v-for="(titleItem, index) in form.titleItems">
+            <h3>{{ titleItem.name }}</h3>
+            <el-card class="exampaper-item-box" v-if="titleItem.questionItems.length !== 0">
+              <el-form-item :key="questionItem.itemOrder" :label="questionItem.itemOrder + '.'"
+                v-for="questionItem in titleItem.questionItems" class="exam-question-item" label-width="50px"
+                :id="'question-' + questionItem.itemOrder">
                 <QuestionEdit :qType="questionItem.questionType" :question="questionItem"
-                              :answer="answer.answerItems[questionItem.itemOrder-1]"/>
+                  :answer="answer.answerItems[questionItem.itemOrder - 1]" />
               </el-form-item>
             </el-card>
           </el-row>
-           <el-row class="do-align-center">
-             <el-button type="primary" @click="submitForm">提交</el-button>
-             <el-button>取消</el-button>
-           </el-row>
+          <el-row class="do-align-center">
+            <el-button type="primary" @click="submitForm">提交</el-button>
+            <el-button>取消</el-button>
+          </el-row>
         </el-form>
       </el-main>
     </el-container>
@@ -61,7 +63,7 @@ import examPaperAnswerApi from '@/api/examPaperAnswer'
 
 export default {
   components: { QuestionEdit },
-  data () {
+  data() {
     return {
       form: {},
       formLoading: false,
@@ -74,7 +76,7 @@ export default {
       remainTime: 0
     }
   },
-  created () {
+  created() {
     let id = this.$route.query.id
     let _this = this
     if (id && parseInt(id) !== 0) {
@@ -88,17 +90,17 @@ export default {
       })
     }
   },
-  mounted () {
+  mounted() {
 
   },
-  beforeDestroy () {
+  beforeDestroy() {
     window.clearInterval(this.timer)
   },
   methods: {
-    formatSeconds (theTime) {
+    formatSeconds(theTime) {
       return formatSeconds(theTime)
     },
-    timeReduce () {
+    timeReduce() {
       let _this = this
       this.timer = setInterval(function () {
         if (_this.remainTime <= 0) {
@@ -109,13 +111,13 @@ export default {
         }
       }, 1000)
     },
-    questionCompleted (completed) {
+    questionCompleted(completed) {
       return this.enumFormat(this.doCompletedTag, completed)
     },
-    goAnchor (selector) {
+    goAnchor(selector) {
       this.$el.querySelector(selector).scrollIntoView({ behavior: 'instant', block: 'center', inline: 'nearest' })
     },
-    initAnswer () {
+    initAnswer() {
       this.answer.id = this.form.id
       let titleItemArray = this.form.titleItems
       for (let tIndex in titleItemArray) {
@@ -126,7 +128,7 @@ export default {
         }
       }
     },
-    submitForm () {
+    submitForm() {
       let _this = this
       window.clearInterval(_this.timer)
       _this.formLoading = true
@@ -157,20 +159,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .align-center {
-    text-align: center
-  }
+.align-center {
+  text-align: center
+}
 
-  .exam-question-item {
-    padding: 10px;
+.exam-question-item {
+  padding: 10px;
 
-    .el-form-item__label {
-      font-size: 15px !important;
-    }
+  .el-form-item__label {
+    font-size: 15px !important;
   }
+}
 
-  .question-title-padding {
-    padding-left: 25px;
-    padding-right: 25px;
-  }
+.question-title-padding {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.do-exam-time {
+  background: #f5f7fa;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  color: #303133;
+}
+
+.do-exam-time i {
+  font-size: 16px;
+  margin-right: 6px;
+  color: #409EFF;
+}
+
+.do-exam-time span {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
 </style>
