@@ -1,7 +1,7 @@
 <template>
   <div class="lowin  lowin-blue">
     <div class="lowin-brand">
-      <img src="@/assets/logo2.png" alt="logo" style="margin-top: 12px">
+      <img src="@/assets/logo.png" alt="logo" style="margin-top: 12px">
     </div>
     <div class="lowin-wrapper">
       <div class="lowin-box lowin-register">
@@ -34,9 +34,6 @@
           </el-form>
         </div>
       </div>
-    </div>
-    <div class="account-foot-copyright">
-      <span>Copyright ©2019-2025 武汉思维跳跃科技有限公司 版权所有</span>
     </div>
   </div>
 </template>

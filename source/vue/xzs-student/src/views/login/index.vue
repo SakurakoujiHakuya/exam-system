@@ -33,9 +33,6 @@
         </div>
       </div>
     </div>
-    <div class="account-foot-copyright">
-      <span>Copyright ©2019-2025 武汉思维跳跃科技有限公司 版权所有</span>
-    </div>
   </div>
 </template>
 
