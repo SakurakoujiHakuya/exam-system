@@ -25,7 +25,20 @@ export default {
       imagePath: ''
     }
   }),
-  getUserEvent: () => post('/api/student/user/log'),
+  getUserEvent: () => Promise.resolve({
+    "code": 1,
+    "message": "成功",
+    "response": [
+        {
+            "id": 1812,  
+            "userId": 1,  //用户id
+            "userName": "student",  //用户名
+            "realName": "Test",  //用户真实姓名
+            "content": "student 登录了学之思开源考试系统",  //动态内容
+            "createTime": "2021-06-08 17:12:50"  //创建时间
+        }
+    ]
+}),
   update: query => post('/api/student/user/update', query),
   messagePageList: query => post('/api/student/user/message/page', query),
   read: id => post('/api/student/user/message/read/' + id),
