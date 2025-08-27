@@ -1,13 +1,14 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+      @toggleClick="toggleSideBar" />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span>{{userName}}</span>
+          <span>{{ userName ? userName : '用户' }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -17,7 +18,7 @@
           <router-link to="/">
             <el-dropdown-item>主页</el-dropdown-item>
           </router-link>
-          <el-dropdown-item  @click.native="logout"  divided>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="logout" divided>退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -43,10 +44,10 @@ export default {
     ])
   },
   methods: {
-    toggleSideBar () {
+    toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    logout () {
+    logout() {
       let _this = this
       loginApi.logout().then(function (result) {
         if (result && result.code === 1) {
@@ -66,7 +67,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -74,7 +75,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
