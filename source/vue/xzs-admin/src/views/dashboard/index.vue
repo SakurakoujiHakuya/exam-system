@@ -58,11 +58,22 @@
         </div>
       </el-col>
     </el-row>
-    <el-row class="echarts-line">
-      <div id="echarts-moth-user" style="width: 100%;height:400px;" v-loading="loading" />
+    <el-row class="student-show">
+      <h3 class="student-show-title">优秀学员展示</h3>
+      <el-carousel :interval="5000" arrow="always" height="220px">
+        <el-carousel-item v-for="item in excellentStudents" :key="item.name">
+          <div class="student-show-item">
+            <img :src="item.avatar" class="student-avatar" />
+            <div class="student-info">
+              <p class="student-name">{{ item.name }}</p>
+              <p class="student-description">{{ item.description }}</p>
+            </div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
     </el-row>
     <el-row class="echarts-line">
-      <div id="echarts-moth-question" style="width: 100%;height:400px;" v-loading="loading" />
+      <div id="echarts-moth-user" style="width: 100%;height:400px;" v-loading="loading" />
     </el-row>
   </div>
 </template>
@@ -83,15 +94,18 @@ export default {
       doExamPaperCount: 0,
       doQuestionCount: 0,
       echartsUserAction: null,
-      echartsQuestion: null,
-      loading: false
+      loading: false,
+      excellentStudents: [
+        { name: '张三', avatar: require('@/assets/avatar.gif'), description: '勤奋刻苦，成绩优异，多次获得奖学金。' },
+        { name: '李四', avatar: require('@/assets/avatar.gif'), description: '积极参加各类竞赛，并取得优异成绩。' },
+        { name: '王五', avatar: require('@/assets/avatar.gif'), description: '乐于助人，团结同学，是老师的得力助手。' },
+        { name: '赵六', avatar: require('@/assets/avatar.gif'), description: '不断挑战自我，超越自我，实现自己的梦想。' }
+      ]
     }
   },
   mounted() {
     // eslint-disable-next-line no-undef
     this.echartsUserAction = echarts.init(document.getElementById('echarts-moth-user'), 'macarons')
-    // eslint-disable-next-line no-undef
-    this.echartsQuestion = echarts.init(document.getElementById('echarts-moth-question'), 'macarons')
     let _this = this
     this.loading = true
     dashboardApi.index().then(re => {
@@ -101,7 +115,6 @@ export default {
       _this.doExamPaperCount = response.doExamPaperCount
       _this.doQuestionCount = response.doQuestionCount
       _this.echartsUserAction.setOption(this.option('用户活跃度', '{b}日{c}度', response.mothDayText, response.mothDayUserActionValue))
-      _this.echartsQuestion.setOption(this.option('题目月数量', '{b}日{c}题', response.mothDayText, response.mothDayDoExamQuestionValue))
       this.loading = false
     })
   },
@@ -316,5 +329,57 @@ export default {
   background: #fff;
   padding: 16px 16px 0;
   margin-bottom: 32px;
+}
+
+.student-show {
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 32px;
+  border-radius: 6px;
+  box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+}
+
+.student-show-title {
+  font-size: 18px;
+  color: #333;
+  margin: 0 0 20px 10px;
+  font-weight: bold;
+}
+
+.student-show-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: column;
+  text-align: center;
+}
+
+.student-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.student-info {
+  color: #666;
+}
+
+.student-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.student-description {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 0 20px;
+}
+
+.el-carousel__item {
+  background-color: #f7f9fc;
+  border-radius: 8px;
 }
 </style>
