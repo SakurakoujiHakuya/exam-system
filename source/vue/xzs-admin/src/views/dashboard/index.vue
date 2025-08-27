@@ -73,7 +73,7 @@
       </el-carousel>
     </el-row>
     <el-row class="echarts-line">
-      <div id="echarts-moth-user" style="width: 100%;height:400px;" v-loading="loading" />
+      <div id="echarts-moth-user" style="width: 100%;height:500px;" v-loading="loading" />
     </el-row>
   </div>
 </template>
@@ -96,10 +96,12 @@ export default {
       echartsUserAction: null,
       loading: false,
       excellentStudents: [
-        { name: '张三', avatar: require('@/assets/avatar.gif'), description: '勤奋刻苦，成绩优异，多次获得奖学金。' },
-        { name: '李四', avatar: require('@/assets/avatar.gif'), description: '积极参加各类竞赛，并取得优异成绩。' },
-        { name: '王五', avatar: require('@/assets/avatar.gif'), description: '乐于助人，团结同学，是老师的得力助手。' },
-        { name: '赵六', avatar: require('@/assets/avatar.gif'), description: '不断挑战自我，超越自我，实现自己的梦想。' }
+        { name: '余联擎', avatar: require('@/assets/ex_stu/ylq.jpg'), description: '勤奋刻苦，成绩优异，多次获得奖学金。' },
+        { name: '周子闲', avatar: require('@/assets/ex_stu/zzx.jpg'), description: '积极参加各类竞赛，并取得优异成绩。' },
+        { name: '黄笛轩', avatar: require('@/assets/ex_stu/hdx.jpg'), description: '乐于助人，团结同学，是老师的得力助手。' },
+        { name: '蔡乐', avatar: require('@/assets/ex_stu/cl.jpg'), description: '不断挑战自我，超越自我，实现自己的梦想。' },
+        { name: '杨磊', avatar: require('@/assets/ex_stu/yl.jpg'), description: '全方位发展，艺术达人。' }
+
       ]
     }
   },
